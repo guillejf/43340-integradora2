@@ -40,7 +40,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: 'mongodb+srv://guillermofergnani:d3IUa8A4QOAZkoQa@guille-cluster.pzfq0ua.mongodb.net/?retryWrites=true&w=majority',
+      mongoUrl: '?retryWrites=true&w=majority',
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 100000,
     }),
