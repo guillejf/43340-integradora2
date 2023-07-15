@@ -1,7 +1,9 @@
+import { fork } from 'child_process';
 import MongoStore from 'connect-mongo';
 import express from 'express';
 import handlebars from 'express-handlebars';
 import session from 'express-session';
+import passport from 'passport';
 import FileStore from 'session-file-store';
 import { __dirname } from './config.js';
 import { cartsApiRouter } from './routes/carts-api.router.js';
@@ -19,11 +21,15 @@ import { usersRouter } from './routes/users.router.js';
 import { connectMongo } from './utils/connect-db.js';
 import { connectSocketServer } from './utils/connect-socket.js';
 import { iniPassport } from './utils/passport.js';
-import passport from 'passport';
+
+import { entorno } from './config.js';
+
+// console.log(entorno);
 
 // CONFIG BASICAS Y CONEXION A BD
 const app = express();
-const PORT = 8080;
+// entorno.PORT
+const PORT = entorno.PORT;
 const fileStore = FileStore(session);
 
 connectMongo();
@@ -40,7 +46,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: '?retryWrites=true&w=majority',
+      mongoUrl: 'mongodb+srv://guillermofergnani:d3IUa8A4QOAZkoQa@guille-cluster.pzfq0ua.mongodb.net/?retryWrites=true&w=majority',
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 100000,
     }),
@@ -82,6 +88,30 @@ app.use('/products-admin', productsAdminRouter);
 app.use('/users', usersRouter);
 app.use('/cart', cartsRouter);
 app.use('/test-chat', testChatRouter);
+
+app.get('/cerrate', (req, res) => {
+  console.log(process.pid);
+  res.send('cerrando todo :(');
+  process.exit();
+});
+
+function operacionCompleja() {
+  let result = 0;
+  for (let i = 0; i < 5e9; i++) {
+    result += i;
+  }
+  return result;
+}
+
+app.get('/complex', (req, res) => {
+  const child = fork('./src/pro2.js');
+
+  child.send('Inicia el proceso!!');
+
+  child.on('message', (result) => {
+    res.send('El resultado de la operacion es ' + result);
+  });
+});
 
 app.get('*', (req, res) => {
   console.log(req.signedCookies);
