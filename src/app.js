@@ -14,6 +14,7 @@ import { logoutRouter } from './routes/logout.router.js';
 import { productsAdminRouter } from './routes/products-admin-router.js';
 import { productsApiRouter } from './routes/products-api.router.js';
 import { productsRouter } from './routes/products.router.js';
+import { jugadoresRouter } from './routes/jugadores.router.js';
 import { registerRouter } from './routes/register.router.js';
 import { testChatRouter } from './routes/test-chat.router.js';
 import { usersApiRouter } from './routes/users-api.router.js';
@@ -46,7 +47,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: 'mongodb+srv://guillermofergnani:d3IUa8A4QOAZkoQa@guille-cluster.pzfq0ua.mongodb.net/?retryWrites=true&w=majority',
+      mongoUrl: '?retryWrites=true&w=majority',
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 100000,
     }),
@@ -82,6 +83,7 @@ app.use('/api/sessions/current', (req, res) => {
 });
 
 // PLANTILLAS
+app.use('/jugadores', jugadoresRouter);
 app.use('/', home);
 app.use('/products', productsRouter);
 app.use('/products-admin', productsAdminRouter);
